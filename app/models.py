@@ -107,3 +107,35 @@ login_manager.anonymous_user = UsuarioAnonimo
 @login_manager.user_loader
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
+
+class Questao(db.Model):
+    __tablename__ = 'questao'
+    cod_questao = db.Column(db.Integer, primary_key=True)
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categoria.cod_categoria'))
+    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuario.cod_usuario'))
+    questao = db.Column(db.String(512), nullable=False)
+    alternativa1 = db.Column(db.String(256), nullable=False)
+    alternativa2 = db.Column(db.String(256), nullable=False)
+    alternativa3 = db.Column(db.String(256), nullable=False)
+    alternativa4 = db.Column(db.String(256), nullable=False)
+    alternativa5 = db.Column(db.String(256), nullable=True)
+    alternativa_correta = db.Column(db.String(15), nullable=False)
+
+    def __init__(self, **kwargs):
+        super(Questao, self).__init__(**kwargs)
+
+    def verificar_resposta(self, resposta):
+        if resposta == self.alternativa_correta:
+            return True
+        else:
+            return False
+
+class Categoria(db.Model):
+    __tablename__ = 'categoria'
+    cod_categoria = db.Column(db.Integer, primary_key=True)
+    categoria_nome = db.Column(db.String(32), unique=True)
+    categoria_padrao = db.Column(db.Boolean, default=False, index=True)
+    questoes = db.RelationshipProperty('Questao', backref='categoria', lazy='dynamic')
+
+    def __init__(self, **kwargs):
+        super(Categoria, self).__init__(**kwargs)

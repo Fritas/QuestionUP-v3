@@ -21,9 +21,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.jogar') }}">Jogar</a></li>
                     {% if current_user.is_authenticated %}
                         <li><a href="{{ url_for('main.usuario', usuario=current_user.usuario) }}">Perfil</a></li>
                     {% endif %}
+                    <li><a href="{{ url_for('main.ranking') }}">Ranking</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
