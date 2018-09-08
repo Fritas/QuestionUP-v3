@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}QuestionUP - Ranking{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Ranking</h1>
+    </div>
+    <div class="col-md-4">
+        {{ pagination.info }}
+        {{ pagination.links }}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuário</th>
+                    <th>Acertos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ loop.index + pagination.skip }}</td>
+                        <td>{{ usuario.usuario }}</td>
+                        <td>{{ usuario.questoes_acertadas }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ pagination.links }}
+    </div>
+{% endblock %}

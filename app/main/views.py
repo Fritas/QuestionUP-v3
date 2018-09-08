@@ -3,10 +3,11 @@
 """
 
 from flask import render_template, flash, redirect, url_for
-#from flask_login import login_required
+from flask_login import login_required
+from flask_paginate import Pagination, get_page_parameter
 from . import main
 from .forms import QuestaoJogoForm
-from ..models import Questao
+from ..models import Questao, Usuario
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -25,4 +26,6 @@ def jogar():
 
 @main.route('/ranking')
 def ranking():
-    return '<__MAIN__> RANKING'
+    usuarios = Usuario.query.all()
+    pagination = Pagination(total=usuarios.count(), record_name='usuarios')
+    return render_template('ranking.html', usuarios=usuarios, pagination=pagination)
