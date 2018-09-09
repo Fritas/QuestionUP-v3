@@ -8,6 +8,7 @@
 *.mdb
 *.pdb
 *.sql
+*.sqlite
 *.sqlite3
 
 ### JetBrains+all ###
