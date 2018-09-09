@@ -13,12 +13,12 @@ class Permissao:
     ADMIN = 16
 
 class Grupo(db.Model):
-    __tablename__ = 'grupo'
+    __tablename__ = 'grupos'
     cod_grupo = db.Column(db.Integer, primary_key=True)
     grupo_nome = db.Column(db.String(64), unique=True)
     grupo_padrao = db.Column(db.Boolean, default=False, index=True)
     permissoes = db.Column(db.Integer)
-    usuarios = db.RelationshipProperty('Usuario', backref='grupo', lazy='dynamic')
+    usuarios = db.RelationshipProperty('Usuario', backref='grupos', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Grupo, self).__init__(**kwargs)
@@ -62,21 +62,19 @@ class Grupo(db.Model):
         return '<Grupo %r>' %self.grupo_nome
 
 class Usuario(UserMixin, db.Model):
-    __tablename__ = 'usuario'
+    __tablename__ = 'usuarios'
     cod_usuario = db.Column(db.Integer, primary_key=True)
-    cod_grupo = db.Column(db.Integer, db.ForeignKey('grupo.cod_grupo'))
+    cod_grupo = db.Column(db.Integer, db.ForeignKey('grupos.cod_grupo'))
     usuario = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(64), unique=True, index=True)
     senha_hash = db.Column(db.String(128))
     questoes_acertadas = db.Column(db.Integer, nullable=False)
     membro_desde = db.Column(db.DateTime(), default=datetime.utcnow)
-    questoes = db.RelationshipProperty('Questao', backref='usuario', lazy='dynamic')
+    questoes = db.RelationshipProperty('Questao', backref='usuarios', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Usuario, self).__init__(**kwargs)
-        if self.grupo is None:
-            if self.grupo is None:
-                self.grupo = Grupo.query.filter_by(grupo_padrao=True).first()
+        self.questoes_acertadas = 0
 
     @property
     def senha(self):
@@ -95,6 +93,9 @@ class Usuario(UserMixin, db.Model):
     def is_administrator(self):
         return self.pode_fazer(Permissao.ADMIN)
 
+    def get_id(self):
+        return self.cod_usuario
+
 class UsuarioAnonimo(AnonymousUserMixin):
     def pode_fazer(self, permissoes):
         return False
@@ -105,14 +106,14 @@ class UsuarioAnonimo(AnonymousUserMixin):
 login_manager.anonymous_user = UsuarioAnonimo
 
 @login_manager.user_loader
-def load_user(user_id):
-    return Usuario.query.get(int(user_id))
+def load_user(cod_usuario):
+    return Usuario.query.get(int(cod_usuario))
 
 class Questao(db.Model):
-    __tablename__ = 'questao'
+    __tablename__ = 'questoes'
     cod_questao = db.Column(db.Integer, primary_key=True)
-    cod_categoria = db.Column(db.Integer, db.ForeignKey('categoria.cod_categoria'))
-    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuario.cod_usuario'))
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.cod_categoria'))
+    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.cod_usuario'))
     questao = db.Column(db.String(512), nullable=False)
     alternativa1 = db.Column(db.String(256), nullable=False)
     alternativa2 = db.Column(db.String(256), nullable=False)
@@ -131,11 +132,11 @@ class Questao(db.Model):
             return False
 
 class Categoria(db.Model):
-    __tablename__ = 'categoria'
+    __tablename__ = 'categorias'
     cod_categoria = db.Column(db.Integer, primary_key=True)
     categoria_nome = db.Column(db.String(32), unique=True)
     categoria_padrao = db.Column(db.Boolean, default=False, index=True)
-    questoes = db.RelationshipProperty('Questao', backref='categoria', lazy='dynamic')
+    questoes = db.RelationshipProperty('Questao', backref='categorias', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Categoria, self).__init__(**kwargs)

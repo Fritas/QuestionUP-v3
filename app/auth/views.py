@@ -16,7 +16,10 @@ def login():
         usuario = Usuario.query.filter_by(usuario=form.usuario.data).first()
         if usuario is not None and usuario.verificar_senha(form.senha.data):
             login_user(usuario)
-            return redirect(url_for('main.index'))
+            next = request.args.get('next')
+            if next is None or not next.startswtih('/'):
+                next = url_for('main.index')
+            return redirect(next)
         flash('Usuario ou senha inválidos.')
     return render_template('auth/login.html', form=form)
 

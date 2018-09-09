@@ -4,16 +4,10 @@
 {% block title %}QuestionUP{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Seja bem vindo
-            {% if current_user.is_authenticated %}
-                ,{{ current_user.usuario }}
-            {% else %}
-                !
-            {% endif %}
-        </h1>
+    <div class="page-header text-center">
+        <h1>Seja bem vindo{% if current_user.is_authenticated %}, {{ current_user.usuario }}!{% else %}!{% endif %}</h1>
     </div>
-    <div class="col-md-4">
+    <div class="container text-center">
         <p>Você está acessando uma aplicação web de perguntas e respostas.</p>
     </div>
 {% endblock %}

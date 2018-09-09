@@ -23,17 +23,13 @@
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
                     <li><a href="{{ url_for('main.jogar') }}">Jogar</a></li>
                     {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('main.usuario', usuario=current_user.usuario) }}">Perfil</a></li>
+                        <li><a href="#">Perfil</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('main.ranking') }}">Ranking</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                        <li class="dropdown">
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
                     {% else %}
                         <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
                     {% endif %}

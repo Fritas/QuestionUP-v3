@@ -4,30 +4,32 @@
 {% block title %}QuestionUP - Ranking{% endblock %}
 
 {% block content %}
-    <div class="page-header">
+    <div class="page-header text-center">
         <h1>Ranking</h1>
     </div>
-    <div class="col-md-4">
-        {{ pagination.info }}
-        {{ pagination.links }}
-        <table>
+    <div class="container center-block">
+        {# pagination.info #}
+        {# pagination.links #}
+        <table class="table table-responsive">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Usuário</th>
-                    <th>Acertos</th>
+                    <th scope="col" data-field="colocacao">Colocação</th>
+                    <th scope="col" data-field="usuario">Usuário</th>
+                    <th scope="col" data-field="acertos">Acertos</th>
                 </tr>
             </thead>
             <tbody>
                 {% for usuario in usuarios %}
+                    {% if loop.index <=10 %}
                     <tr>
-                        <td>{{ loop.index + pagination.skip }}</td>
+                        <th scope="row">{{ loop.index }} {# + pagination.skip #}</th>
                         <td>{{ usuario.usuario }}</td>
                         <td>{{ usuario.questoes_acertadas }}</td>
                     </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
-        {{ pagination.links }}
+        {# pagination.links #}
     </div>
 {% endblock %}
