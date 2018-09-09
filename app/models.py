@@ -7,56 +7,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
 
-class Permissao:
-    JOGAR = 1
-    MODERADOR = 8
-    ADMIN = 16
 
 class Grupo(db.Model):
     __tablename__ = 'grupos'
     cod_grupo = db.Column(db.Integer, primary_key=True)
     grupo_nome = db.Column(db.String(64), unique=True)
-    grupo_padrao = db.Column(db.Boolean, default=False, index=True)
-    permissoes = db.Column(db.Integer)
     usuarios = db.RelationshipProperty('Usuario', backref='grupos', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Grupo, self).__init__(**kwargs)
-        if self.permissoes is None:
-            self.permissoes = 0
-
-    @staticmethod
-    def inserir_grupos():
-        grupos = {
-            'Usuario': [Permissao.JOGAR],
-            'Moderador': [Permissao.JOGAR, Permissao.MODERADOR],
-            'Administrador': [Permissao.JOGAR, Permissao.MODERADOR, Permissao.ADMIN],
-        }
-        grupo_padrao = 'Usuario'
-        for g in grupos:
-            grupo = Grupo.query.filter_by(grupo_nome=g).first()
-            if grupo is None:
-                grupo = Grupo(name=g)
-            grupo.resetar_permissoes()
-            for perm in grupos[g]:
-                grupo.adicionar_permissao(perm)
-            grupo.grupo_padrao = (grupo.grupo_nome == grupo_padrao)
-            db.session.add(grupo)
-        db.session.commit()
-
-    def adicionar_permissao(self, perm):
-        if not self.tem_permissao(perm):
-            self.permissoes += perm
-
-    def remover_permissao(self, perm):
-        if self.tem_permissao(perm):
-            self.permissoes -= perm
-
-    def resetar_permissoes(self):
-        self.permissoes = 0
-
-    def tem_permissao(self, perm):
-        return self.permissoes & perm == perm
 
     def __repr__(self):
         return '<Grupo %r>' %self.grupo_nome
@@ -89,12 +48,11 @@ class Usuario(UserMixin, db.Model):
     def verificar_senha(self, senha):
         return check_password_hash(self.senha_hash, senha)
 
-    def pode_fazer(self, perm):
-        return self.grupo is not None and self.grupo.tem_permissao(perm)
-
-    @staticmethod
-    def is_administrator():
-        return True
+    def is_administrator(self):
+        """ Verifica se a pessoa eh admin(id=1) ou usuario(id=0) """
+        if self.cod_grupo == 1:
+            return True
+        return False
 
     def get_id(self):
         return self.cod_usuario
@@ -136,7 +94,6 @@ class Categoria(db.Model):
     __tablename__ = 'categorias'
     cod_categoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
     categoria_nome = db.Column(db.String(32), unique=True)
-    categoria_padrao = db.Column(db.Boolean, default=False, index=True)
     questoes = db.RelationshipProperty('Questao', backref='categorias', lazy='dynamic')
 
     def __init__(self, **kwargs):

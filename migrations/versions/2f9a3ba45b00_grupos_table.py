@@ -20,15 +20,10 @@ def upgrade():
         'grupos',
         sa.Column('cod_grupo', sa.Integer(), nullable=False),
         sa.Column('grupo_nome', sa.String(length=64), nullable=True),
-        sa.Column('grupo_padrao', sa.Boolean(), nullable=True),
-        sa.Column('permisssoes', sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint('cod_grupo'),
         sa.UniqueConstraint('grupo_nome')
     )
 
-    op.create_index('ix_grupos_grupo_padrao', 'grupos', ['grupo_padrao'])
-
 def downgrade():
     """ Executa as seguintes tarefas no banco de dados """
-    op.drop_index('ix_grupos_grupo_padrao', 'grupos')
     op.drop_table('grupos')

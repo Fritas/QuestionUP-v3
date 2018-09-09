@@ -20,14 +20,11 @@ def upgrade():
         'categorias',
         sa.Column('cod_categoria', sa.Integer(), nullable=False),
         sa.Column('categoria_nome', sa.String(length=32)),
-        sa.Column('categoria_padrao', sa.Boolean, nullable=False),
         sa.PrimaryKeyConstraint('cod_categoria'),
         sa.UniqueConstraint('categoria_nome')
     )
 
-    op.create_index('ix_categorias_categoria_padrao', 'categorias', ['categoria_padrao'], unique=False)
 
 def downgrade():
     """ Executa as seguintes tarefas no banco de dados """
-    op.drop_index('ix_categorias_categoria_padrao', 'categorias')
     op.drop_table('categorias')

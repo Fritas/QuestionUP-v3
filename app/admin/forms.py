@@ -30,7 +30,7 @@ class InserirQuestaoForm(FlaskForm):
         choices=[
             (0, '--'),
             (1, 'Matemática'),
-            (2, 'Geografia')
+            (2, 'Geografia'),
         ],
         validators=[DataRequired()],
         coerce=int

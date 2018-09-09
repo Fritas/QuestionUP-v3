@@ -33,25 +33,22 @@ def index():
 def jogar():
     try:
         if request.method == 'GET':
-            usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
-            usuario.numero_jogos = usuario.numero_jogos + 1
-            db.session.commit()
             questao = questao_aleatoria()
             form = ConfirmarRepostaForm()
             return render_template('jogar.html', questao=questao, form=form)
         if request.method == 'POST':
+            usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
+            usuario.numero_jogos = usuario.numero_jogos + 1
             alternativa_escolhida = request.form['questao']
             cod_questao = request.form['cod_questao']
             questao = getQuestao(cod_questao)
             if verificar_resposta(questao, alternativa_escolhida):
                 questao = questao_aleatoria()
                 form = ConfirmarRepostaForm()
-                usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
                 usuario.questoes_acertadas = usuario.questoes_acertadas + 1
                 db.session.commit()
                 flash('Parabéns, você acertou mais uma questão!')
                 return redirect(url_for('main.jogar', questao=questao, form=form))
-            usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
             usuario.questoes_acertadas = 0
             db.session.commit()
             flash('Que pena! Você errou, com isso seu placar foi a zero!')
