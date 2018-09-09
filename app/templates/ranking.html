@@ -15,7 +15,8 @@
                 <tr>
                     <th scope="col" data-field="colocacao">Colocação</th>
                     <th scope="col" data-field="usuario">Usuário</th>
-                    <th scope="col" data-field="acertos">Acertos</th>
+                    <th scope="col" data-field="acertos">Nº Acertos</th>
+                    <th scope="col" data-field="partidas">Nº Tentativas</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +26,7 @@
                         <th scope="row">{{ loop.index }} {# + pagination.skip #}</th>
                         <td>{{ usuario.usuario }}</td>
                         <td>{{ usuario.questoes_acertadas }}</td>
+                        <td>{{ usuario.numero_jogos }}</td>
                     </tr>
                     {% endif %}
                 {% endfor %}

@@ -1,0 +1,24 @@
+"""
+form = QuestaoJogoForm()
+    if form.validate_on_submit():
+        questao = Questao.query.filter_by(cod_questao=form.cod_questao.data).first()
+        print(form.questao.data)
+        if questao is not None and questao.verificar_resposta(form.questao.data):
+            return redirect(url_for('main.jogar'))
+        flash('Questão inválida.')
+    return render_template('jogar.html', form=form)
+"""
+
+    if request.method == 'GET':
+        questao = get_questao()
+        form = ConfirmarRepostaForm()
+        return render_template('jogar.html', questao=questao, form=form)
+    if request.method == 'POST':
+        alternativa_escolhida = request.form['questao']
+        questao = request.args.get('questao')
+        print('\n\n\n\n\n%s\n\n\n\n\n' %(questao))
+        if verificar_resposta(questao, alternativa_escolhida):
+            questao = get_questao()
+            form = ConfirmarRepostaForm()
+            return redirect(url_for('main.jogar', questao=questao, form=form))
+        return redirect(url_for('main.index'))

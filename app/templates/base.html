@@ -29,6 +29,9 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
+                        {% if current_user.is_administrator %}
+                            <li><a href="{{ url_for('admin.index') }}">Administrar</a></li>
+                        {% endif %}
                         <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
                     {% else %}
                         <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>

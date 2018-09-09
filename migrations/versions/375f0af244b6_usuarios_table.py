@@ -24,6 +24,7 @@ def upgrade():
         sa.Column('email', sa.String(length=64), unique=True),
         sa.Column('senha_hash', sa.String(length=128), nullable=False),
         sa.Column('questoes_acertadas', sa.Integer(), nullable=False),
+        sa.Column('numero_jogos', sa.Integer(), nullable=False),
         sa.Column('membro_desde', sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(['cod_grupo'], ['grupos.cod_grupo'],),
         sa.PrimaryKeyConstraint('cod_usuario')

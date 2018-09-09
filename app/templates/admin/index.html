@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}QuestionUP - Admin{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Bem vindo ao painel administrativo, {{ current_user.usuario }}.</h1>
+    </div>
+    <div class="container-fluid">
+        <p>Você está acessando o sistema de admnistração do QuestionUP.</p>
+        <p>>> <a href="{{ url_for('admin.inserir_questao') }}">Clique aqui para inserir uma nova questão</a>.</p>
+        <p>>> <a href="{{ url_for('admin.inserir_categoria') }}">Clique aqui para inserir uma nova categoria</a>.</p>
+    </div>
+{% endblock %}

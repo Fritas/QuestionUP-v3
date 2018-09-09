@@ -3,7 +3,7 @@
 """
 
 from flask import render_template, redirect, request, url_for, flash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required
 from . import auth
 from .. import db
 from ..models import Usuario
@@ -17,7 +17,7 @@ def login():
         if usuario is not None and usuario.verificar_senha(form.senha.data):
             login_user(usuario)
             next = request.args.get('next')
-            if next is None or not next.startswtih('/'):
+            if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
         flash('Usuario ou senha inválidos.')

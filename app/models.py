@@ -69,12 +69,14 @@ class Usuario(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     senha_hash = db.Column(db.String(128))
     questoes_acertadas = db.Column(db.Integer, nullable=False)
+    numero_jogos = db.Column(db.Integer, nullable=False)
     membro_desde = db.Column(db.DateTime(), default=datetime.utcnow)
     questoes = db.RelationshipProperty('Questao', backref='usuarios', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Usuario, self).__init__(**kwargs)
         self.questoes_acertadas = 0
+        self.numero_jogos = 0
 
     @property
     def senha(self):
@@ -90,8 +92,9 @@ class Usuario(UserMixin, db.Model):
     def pode_fazer(self, perm):
         return self.grupo is not None and self.grupo.tem_permissao(perm)
 
-    def is_administrator(self):
-        return self.pode_fazer(Permissao.ADMIN)
+    @staticmethod
+    def is_administrator():
+        return True
 
     def get_id(self):
         return self.cod_usuario
@@ -111,7 +114,7 @@ def load_user(cod_usuario):
 
 class Questao(db.Model):
     __tablename__ = 'questoes'
-    cod_questao = db.Column(db.Integer, primary_key=True)
+    cod_questao = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.cod_categoria'))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.cod_usuario'))
     questao = db.Column(db.String(512), nullable=False)
@@ -125,15 +128,13 @@ class Questao(db.Model):
     def __init__(self, **kwargs):
         super(Questao, self).__init__(**kwargs)
 
-    def verificar_resposta(self, resposta):
-        if resposta == self.alternativa_correta:
-            return True
-        else:
-            return False
+    @staticmethod
+    def pegar_questao_aleatoria():
+        pass
 
 class Categoria(db.Model):
     __tablename__ = 'categorias'
-    cod_categoria = db.Column(db.Integer, primary_key=True)
+    cod_categoria = db.Column(db.Integer, primary_key=True, autoincrement=True)
     categoria_nome = db.Column(db.String(32), unique=True)
     categoria_padrao = db.Column(db.Boolean, default=False, index=True)
     questoes = db.RelationshipProperty('Questao', backref='categorias', lazy='dynamic')
