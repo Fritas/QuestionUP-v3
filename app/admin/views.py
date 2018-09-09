@@ -13,16 +13,15 @@ from ..models import Usuario, Questao, Categoria
 @login_required
 def index():
     """ Abre pagina 'ponte' que interliga todas as paginas com fins administrativos """
-    if Usuario.is_administrator(current_user):
+    if current_user.is_administrator():
         return render_template('admin/index.html')
-    else:
-        return redirect(url_for('main.index'))
+    return redirect(url_for('main.index'))
 
 @admin.route('/inserir_questao', methods=['GET', 'POST'])
 @login_required
 def inserir_questao():
     """ Abre pagina com formulario para adicionar nova questao ao sistema """
-    if current_user.is_administrator(current_user):
+    if current_user.is_administrator():
         form = InserirQuestaoForm()
         if form.validate_on_submit():
             questao = Questao(
@@ -46,7 +45,7 @@ def inserir_questao():
 @login_required
 def inserir_categoria():
     """ Abre pagina com formulario para adicionar nova categoria ao sistema """
-    if current_user.is_administrator(current_user):
+    if current_user.is_administrator():
         form = InserirCategoriaForm()
         if form.validate_on_submit():
             categoria = Categoria(
