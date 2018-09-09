@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/venv,database,virtualenv,pycharm+all,visualstudio,jetbrains+all,visualstudiocode
 
+### Backup ###
+*.backup
+
 ### Database ###
 *.accdb
 *.db
