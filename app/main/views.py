@@ -10,6 +10,8 @@ from .forms import ConfirmarRepostaForm
 from .. import db
 from ..models import Questao, Usuario
 
+numero_acertos = 0
+
 def verificar_resposta(questao, resposta):
     if questao.alternativa_correta == resposta:
         return True
@@ -38,18 +40,21 @@ def jogar():
             return render_template('jogar.html', questao=questao, form=form)
         if request.method == 'POST':
             usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
-            usuario.numero_jogos = usuario.numero_jogos + 1
             alternativa_escolhida = request.form['questao']
             cod_questao = request.form['cod_questao']
             questao = getQuestao(cod_questao)
             if verificar_resposta(questao, alternativa_escolhida):
                 questao = questao_aleatoria()
                 form = ConfirmarRepostaForm()
-                usuario.questoes_acertadas = usuario.questoes_acertadas + 1
+                global numero_acertos
+                numero_acertos += 1
+                if numero_acertos > usuario.questoes_acertadas:
+                    usuario.questoes_acertadas = numero_acertos
                 db.session.commit()
                 flash('Parabéns, você acertou mais uma questão!')
                 return redirect(url_for('main.jogar', questao=questao, form=form))
-            usuario.questoes_acertadas = 0
+            numero_acertos = 0
+            usuario.numero_jogos = usuario.numero_jogos + 1
             db.session.commit()
             flash('Que pena! Você errou, com isso seu placar foi a zero!')
             return redirect(url_for('main.ranking'))
@@ -58,6 +63,6 @@ def jogar():
 
 @main.route('/ranking')
 def ranking():
-    usuarios = Usuario.query.all()
+    usuarios = Usuario.query.order_by(Usuario.questoes_acertadas.desc()).all()
     #pagination = Pagination(total=usuarios.count(), record_name='usuarios')
     return render_template('ranking.html', usuarios=usuarios)#, pagination=pagination)

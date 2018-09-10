@@ -36,12 +36,14 @@
                     {{ questao.alternativa4 }}
                 </label>
             </div>
-            <div class="radio">
-                <label>
-                    <input id="questao-4" name="questao" type="radio" value="alternativa5">
-                    {{ questao.alternativa5 }}
-                </label>
-            </div>
+            {% if questao.alternativa5 != '' %}
+                <div class="radio">
+                    <label>
+                        <input id="questao-4" name="questao" type="radio" value="alternativa5">
+                        {{ questao.alternativa5 }}
+                    </label>
+                </div>
+            {% endif %}
             {{ form.enviar }}
         </form>
     </div>
