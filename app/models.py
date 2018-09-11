@@ -86,6 +86,9 @@ class Questao(db.Model):
     def __init__(self, **kwargs):
         super(Questao, self).__init__(**kwargs)
 
+    def __repr__(self):
+        return '<Questao %r>' %self.cod_questao
+
     @staticmethod
     def pegar_questao_aleatoria():
         pass
