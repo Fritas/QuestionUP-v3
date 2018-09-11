@@ -19,15 +19,19 @@ def verificar_resposta(questao, resposta):
     return False
 
 def questao_aleatoria():
+    print('\n\n\n\n\n\n\n\n\n\nÚltima questão da lista antes de gerar: %s\n\n\n\n\n\n\n\n\n\n'%ultima_questao)
     global count
     count = True
     while count == True:
         qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
         questao = Questao.query[qtd_questoes_disponiveis]
-        if questao != ultima_questao[0]:
-            ultima_questao[0] = questao
-            count = False
-            return questao
+        if questao == ultima_questao[0]:
+            qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
+            questao = Questao.query[qtd_questoes_disponiveis]
+        ultima_questao[0] = questao
+        print('\n\n\n\n\n\n\n\n\n\nÚltima questão da lista depois de gerar: %s\n\n\n\n\n\n\n\n\n\n'%ultima_questao)
+        count = False
+    return questao
 
 def getQuestao(cod_questao):
     questao = Questao.query.filter_by(cod_questao=cod_questao).first()
@@ -59,7 +63,9 @@ def jogar():
                     usuario.questoes_acertadas = numero_acertos
                 db.session.commit()
                 flash('Parabéns, você acertou mais uma questão!')
-                return redirect(url_for('main.jogar', questao=questao, form=form))
+                #form['questao'] = ''
+                #form['form']=''
+                return render_template('jogar.html', questao=questao, form=form)
             numero_acertos = 0
             usuario.numero_jogos = usuario.numero_jogos + 1
             db.session.commit()
