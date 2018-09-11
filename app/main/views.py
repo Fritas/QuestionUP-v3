@@ -11,6 +11,7 @@ from .. import db
 from ..models import Questao, Usuario
 
 numero_acertos = 0
+ultima_questao = [None]
 
 def verificar_resposta(questao, resposta):
     if questao.alternativa_correta == resposta:
@@ -18,9 +19,15 @@ def verificar_resposta(questao, resposta):
     return False
 
 def questao_aleatoria():
-    qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
-    questao = Questao.query[qtd_questoes_disponiveis]
-    return questao
+    global count
+    count = True
+    while count == True:
+        qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
+        questao = Questao.query[qtd_questoes_disponiveis]
+        if questao != ultima_questao[0]:
+            ultima_questao[0] = questao
+            count = False
+            return questao
 
 def getQuestao(cod_questao):
     questao = Questao.query.filter_by(cod_questao=cod_questao).first()
@@ -56,6 +63,7 @@ def jogar():
             numero_acertos = 0
             usuario.numero_jogos = usuario.numero_jogos + 1
             db.session.commit()
+            ultima_questao[0] = None
             flash('Que pena! Você errou, com isso seu placar foi a zero!')
             return redirect(url_for('main.ranking'))
     except Exception:
