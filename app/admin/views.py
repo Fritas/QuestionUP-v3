@@ -5,7 +5,7 @@
 from flask import render_template, redirect, url_for
 from flask_login import login_required, current_user
 from . import admin
-from .forms import InserirQuestaoForm, InserirCategoriaForm
+from .forms import InserirQuestaoForm, InserirCategoriaForm, AtualizarUsuarioForm
 from .. import db
 from ..models import Usuario, Questao, Categoria
 
@@ -49,10 +49,19 @@ def inserir_categoria():
         form = InserirCategoriaForm()
         if form.validate_on_submit():
             categoria = Categoria(
-                categoria_nome=form.categoria_nome,
+                categoria_nome=form.categoria_nome
             )
             db.session.add(categoria)
             db.session.commit()
             return redirect(url_for('admin.inserir_categoria'))
         return render_template('admin/inserir_categoria.html', form=form)
+    return redirect(url_for('main.index'))
+
+@admin.route('/atualizar_usuario', methods=['GET', 'POST'])
+@login_required
+def atualizar_usuario():
+    """ Abre pagina com formulario para atualizar informacoes do usuario """
+    if current_user.is_administrator():
+        form = AtualizarUsuarioForm()
+        return render_template('admin/atualizar_usuario.html', form=form)
     return redirect(url_for('main.index'))

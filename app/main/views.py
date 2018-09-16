@@ -5,13 +5,15 @@
 import random
 from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
+from sqlalchemy.sql import exists
 from . import main
 from .forms import ConfirmarRepostaForm
 from .. import db
 from ..models import Questao, Usuario
 
 numero_acertos = 0
-ultima_questao = [None]
+#nr_codigo = 1
+lista_questoes = [None]
 
 def verificar_resposta(questao, resposta):
     if questao.alternativa_correta == resposta:
@@ -19,18 +21,20 @@ def verificar_resposta(questao, resposta):
     return False
 
 def questao_aleatoria():
-    print('\n\n\n\n\n\n\n\n\n\nÚltima questão da lista antes de gerar: %s\n\n\n\n\n\n\n\n\n\n'%ultima_questao)
-    global count
-    count = True
-    while count == True:
-        qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
-        questao = Questao.query[qtd_questoes_disponiveis]
-        if questao == ultima_questao[0]:
-            qtd_questoes_disponiveis = random.randrange(0, Questao.query.count())
-            questao = Questao.query[qtd_questoes_disponiveis]
-        ultima_questao[0] = questao
-        print('\n\n\n\n\n\n\n\n\n\nÚltima questão da lista depois de gerar: %s\n\n\n\n\n\n\n\n\n\n'%ultima_questao)
-        count = False
+    if lista_questoes == []:
+        lista_questoes.append(None)
+        abort(500)
+    if lista_questoes[0] == None:
+        lista_questoes.clear()
+        questoes = Questao.query.all()
+        for questao in questoes:
+            lista_questoes.append(questao)
+    numero_aleatorio = random.randrange(0, len(lista_questoes))
+    print(lista_questoes)
+    return lista_questoes[numero_aleatorio]
+
+def questao_sequencial(codigo_questao):
+    questao = Questao.query.filter_by(cod_questao=codigo_questao).first()
     return questao
 
 def getQuestao(cod_questao):
@@ -44,36 +48,38 @@ def index():
 @main.route('/jogar', methods=['GET', 'POST'])
 @login_required
 def jogar():
-    try:
-        if request.method == 'GET':
+    if request.method == 'GET':
+        questao = questao_aleatoria()
+        #global nr_codigo
+        #questao = questao_sequencial(nr_codigo)
+        form = ConfirmarRepostaForm()
+        return render_template('jogar.html', questao=questao, form=form)
+    if request.method == 'POST':
+        usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
+        alternativa_escolhida = request.form['questao']
+        cod_questao = request.form['cod_questao']
+        questao = getQuestao(cod_questao)
+        print(lista_questoes)
+        if verificar_resposta(questao, alternativa_escolhida):
+            #lista_questoes.remove(questao)
             questao = questao_aleatoria()
+            #if db.session.query.exists().where(Questao.cod_questao=nr_codigo+1).scalar()
+             #   nr_codigo += 1
+            #questao = questao_sequencial(nr_codigo)
             form = ConfirmarRepostaForm()
-            return render_template('jogar.html', questao=questao, form=form)
-        if request.method == 'POST':
-            usuario = Usuario.query.filter(Usuario.cod_usuario == str(current_user.cod_usuario)).first()
-            alternativa_escolhida = request.form['questao']
-            cod_questao = request.form['cod_questao']
-            questao = getQuestao(cod_questao)
-            if verificar_resposta(questao, alternativa_escolhida):
-                questao = questao_aleatoria()
-                form = ConfirmarRepostaForm()
-                global numero_acertos
-                numero_acertos += 1
-                if numero_acertos > usuario.questoes_acertadas:
-                    usuario.questoes_acertadas = numero_acertos
-                db.session.commit()
-                flash('Parabéns, você acertou mais uma questão!')
-                #form['questao'] = ''
-                #form['form']=''
-                return render_template('jogar.html', questao=questao, form=form)
-            numero_acertos = 0
-            usuario.numero_jogos = usuario.numero_jogos + 1
+            global numero_acertos
+            numero_acertos += 1
+            if numero_acertos > usuario.questoes_acertadas:
+                usuario.questoes_acertadas = numero_acertos
             db.session.commit()
-            ultima_questao[0] = None
-            flash('Que pena! Você errou, com isso seu placar foi a zero!')
-            return redirect(url_for('main.ranking'))
-    except Exception:
-        abort(500)
+            flash('Parabéns, você acertou mais uma questão!')
+            return render_template('jogar.html', questao=questao, form=form)
+        numero_acertos = 0
+        usuario.numero_jogos = usuario.numero_jogos + 1
+        db.session.commit()
+        lista_questoes[0] = None
+        flash('Que pena! Você errou, com isso seu placar foi a zero!')
+        return redirect(url_for('main.ranking'))
 
 @main.route('/ranking')
 def ranking():

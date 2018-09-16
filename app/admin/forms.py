@@ -40,3 +40,13 @@ class InserirQuestaoForm(FlaskForm):
 class InserirCategoriaForm(FlaskForm):
     categoria_nome = StringField('Informe o nome da nova categoria:', validators=[DataRequired()])
     enviar = SubmitField('Inserir Categoria')
+
+class AtualizarUsuarioForm(FlaskForm):
+    usuario = SelectField(
+        'Selecione um usuário:',
+        choices=[
+            (0, '--')
+        ],
+        validators=[DataRequired()]
+    )
+    enviar = SubmitField('Atualizar')
