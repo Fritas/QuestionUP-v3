@@ -4,13 +4,22 @@
 {% block title %}QuestionUP - Admin{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Bem vindo ao painel administrativo, {{ current_user.usuario }}.</h1>
-    </div>
-    <div class="container-fluid">
-        <p>Você está acessando o sistema de admnistração do QuestionUP.</p>
-        <p>>> <a href="{{ url_for('admin.inserir_questao') }}">Clique aqui para inserir uma nova questão</a>.</p>
-        <p>>> <a href="{{ url_for('admin.inserir_categoria') }}">Clique aqui para inserir uma nova categoria</a>.</p>
-        <p>>> <a href="{{ url_for('admin.atualizar_usuario') }}">Atualizar usuário</a></p>
+    <div class="container" style="text-align:left;">
+        <ol class="breadcrumb">
+            <li class="active">Dashboard</li>
+            <li><a href="/admin/listar_questoes?q=1&c=1">Questões</a></li>
+            <li><a href="/admin/listar_usuarios?u=1&g=1">Usuários</a></li>
+        </ol>
+        <div class="page-header">
+            <h1>Bem vindo ao painel administrativo, {{ current_user.usuario }}.</h1>
+        </div>
+        <div>
+            <p>Você está acessando o sistema de admnistração do QuestionUP.</p>
+            <p>>> <a href="{{ url_for('admin.inserir_questao') }}">Clique aqui para inserir uma nova questão</a>.</p>
+            <p>>> <a href="{{ url_for('admin.deletar_questao') }}">Clique aqui para deletar uma questão</a></p>
+            <p>>> <a href="{{ url_for('admin.inserir_categoria') }}">Clique aqui para inserir uma nova categoria</a>.</p>
+            <p>>> <a href="{{ url_for('admin.listar_usuarios') }}">Mostrar usuários</a></p>
+            <p>>> <a href="{{ url_for('admin.atualizar_usuario') }}">Atualizar usuário</a></p>
+        </div>
     </div>
 {% endblock %}

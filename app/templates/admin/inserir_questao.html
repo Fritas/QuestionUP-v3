@@ -4,10 +4,53 @@
 {% block title %}QuestionUP - Admin{% endblock %}
 
 {% block content %}
-    <div class="page-header text-center">
-        <h1>Inserir Questão</h1>
-    </div>
-    <div class="container" style="text-align: center;">
-        {{ wtf.quick_form(form) }}
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/admin/">Dashboard</a></li>
+            <li><a href="/admin/listar_questoes?q=1&c=1">Questões</a></li>
+            <li><a href="/admin/listar_usuarios?u=1&g=1">Usuários</a></li>
+        </ol>
+        <div style="padding-top:50px;"></div>
+        <div class="row">
+            <div class="col-xs-6">
+                <b>Como inserir uma questão?</b>
+                <p>
+                    Preencha os dados, em seguida,
+                    clique em inserir.
+                </p>
+            </div>
+            <div class="col-xs-6" style="text-align: justify;">
+                <form method="POST">
+                    <div class="col-xs-6">
+                        <b>Questão:</b><br> 
+                        <textarea name="questao" rows="1" cols="30" style="height:225px;"></textarea> <br><br>
+                        <b>Categoria:</b><br>
+                        <select name="categoria" style="height:25px; width:232px;">
+                            <option value="ESCOLHA_CATEGORIA">------------------</option>
+                            {% for categoria in categorias %}
+                                <option value="{{ categoria.cod_categoria }}">{{ categoria.categoria_nome }}</option>
+                            {% endfor %}
+                        </select><br><br>
+                        <button type="submit" style="height:25px; width:232px; margin-top: 15px;">Inserir</button>
+                    </div>
+                    <div class="col-xs-6">
+                        <b>1ª Alternativa:</b><br> <input type="text" name="alternativa1"> <br><br>
+                        <b>2ª Alternativa:</b><br> <input type="text" name="alternativa2"> <br><br>
+                        <b>3ª Alternativa:</b><br> <input type="text" name="alternativa3"> <br><br>
+                        <b>4ª Alternativa:</b><br> <input type="text" name="alternativa4"> <br><br>
+                        <b>5ª Alternativa:</b><br> <input type="text" name="alternativa5"> <br><br>
+                        <b>Resposta:</b><br>
+                        <select name="resposta" style="height:25px; width:175px;">
+                            <option value="ESCOLHA_ALTERNATIVA_CORRETA">------------------</option>
+                            <option value="alternativa1">1ª Alternativa</option>
+                            <option value="alternativa2">2ª Alternativa</option>
+                            <option value="alternativa3">3ª Alternativa</option>
+                            <option value="alternativa4">4ª Alternativa</option>
+                            <option value="alternativa5">5ª Alternativa</option>
+                        </select>
+                    </div>
+                </form>    
+            </div>
+        </div>
     </div>
 {% endblock %}

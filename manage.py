@@ -71,7 +71,7 @@ def montar():
     upgrade()
 
     # criar grupos de usuarios (usuario, mod, admin)
-    Grupo.inserir_grupos()
+    # Grupo.inserir_grupos()
 
 if __name__ == '__main__':
-    manager.run()
+    app.run(host='192.168.2.2', port=5000)

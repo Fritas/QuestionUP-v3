@@ -4,47 +4,49 @@
 {% block title %}QuestionUP - Jogar{% endblock %}
 
 {% block content %}
-    <div class="page-header text-center">
-        <h1>Jogar</h1>
-    </div>
-    <div class="container" style="text-align: center;">
-        <form action="" method="POST" class="form" role="form">
-            {{ form.csrf_token }}
-            <input id="cod_questao" name="cod_questao" type="hidden" value="{{ questao.cod_questao }}">
-            <label for="questao">{{ questao.questao }}</label>
-            <div class="radio">
-                <label>
-                    <input id="questao-0" name="questao" type="radio" value="alternativa1">
-                    {{ questao.alternativa1 }}
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input id="questao-1" name="questao" type="radio" value="alternativa2">
-                    {{ questao.alternativa2 }}
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input id="questao-2" name="questao" type="radio" value="alternativa3">
-                    {{ questao.alternativa3 }}
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input id="questao-3" name="questao" type="radio" value="alternativa4">
-                    {{ questao.alternativa4 }}
-                </label>
-            </div>
-            {% if questao.alternativa5 != '' %}
+    <div class="container">
+        <div class="page-header text-left">
+            <h1>Questão {{ questao.cod_questao }}</h1>
+        </div>
+        <div style="text-align: center;">
+            <form action="" method="POST" class="form" role="form" style="text-align: left;">
+                {{ form.csrf_token }}
+                <input id="cod_questao" name="cod_questao" type="hidden" value="{{ questao.cod_questao }}">
+                <label for="questao">{{ questao.questao }}</label>
                 <div class="radio">
                     <label>
-                        <input id="questao-4" name="questao" type="radio" value="alternativa5">
-                        {{ questao.alternativa5 }}
+                        <input id="questao-0" name="questao" type="radio" value="alternativa1">
+                        {{ questao.alternativa1 }}
                     </label>
                 </div>
-            {% endif %}
-            {{ form.enviar }}
-        </form>
+                <div class="radio">
+                    <label>
+                        <input id="questao-1" name="questao" type="radio" value="alternativa2">
+                        {{ questao.alternativa2 }}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input id="questao-2" name="questao" type="radio" value="alternativa3">
+                        {{ questao.alternativa3 }}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input id="questao-3" name="questao" type="radio" value="alternativa4">
+                        {{ questao.alternativa4 }}
+                    </label>
+                </div>
+                {% if questao.alternativa5 != '' %}
+                    <div class="radio">
+                        <label>
+                            <input id="questao-4" name="questao" type="radio" value="alternativa5">
+                            {{ questao.alternativa5 }}
+                        </label>
+                    </div>
+                {% endif %}
+                {{ form.enviar }}
+            </form>
+        </div>
     </div>
 {% endblock %}

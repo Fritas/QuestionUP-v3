@@ -21,17 +21,22 @@ def verificar_resposta(questao, resposta):
     return False
 
 def questao_aleatoria():
-    if lista_questoes == []:
-        lista_questoes.append(None)
+    try:
+        if lista_questoes == []:
+            lista_questoes.append(None)
+            abort(500)
+        if lista_questoes[0] == None:
+            try:
+                lista_questoes.clear()
+                questoes = Questao.query.all()
+                for questao in questoes:
+                    lista_questoes.append(questao)
+            except IndexError:
+                return index()
+        numero_aleatorio = random.randrange(0, len(lista_questoes))
+        return lista_questoes[numero_aleatorio]
+    except:
         abort(500)
-    if lista_questoes[0] == None:
-        lista_questoes.clear()
-        questoes = Questao.query.all()
-        for questao in questoes:
-            lista_questoes.append(questao)
-    numero_aleatorio = random.randrange(0, len(lista_questoes))
-    print(lista_questoes)
-    return lista_questoes[numero_aleatorio]
 
 def questao_sequencial(codigo_questao):
     questao = Questao.query.filter_by(cod_questao=codigo_questao).first()
@@ -50,8 +55,6 @@ def index():
 def jogar():
     if request.method == 'GET':
         questao = questao_aleatoria()
-        #global nr_codigo
-        #questao = questao_sequencial(nr_codigo)
         form = ConfirmarRepostaForm()
         return render_template('jogar.html', questao=questao, form=form)
     if request.method == 'POST':
@@ -59,13 +62,8 @@ def jogar():
         alternativa_escolhida = request.form['questao']
         cod_questao = request.form['cod_questao']
         questao = getQuestao(cod_questao)
-        print(lista_questoes)
         if verificar_resposta(questao, alternativa_escolhida):
-            #lista_questoes.remove(questao)
             questao = questao_aleatoria()
-            #if db.session.query.exists().where(Questao.cod_questao=nr_codigo+1).scalar()
-             #   nr_codigo += 1
-            #questao = questao_sequencial(nr_codigo)
             form = ConfirmarRepostaForm()
             global numero_acertos
             numero_acertos += 1
@@ -83,6 +81,9 @@ def jogar():
 
 @main.route('/ranking')
 def ranking():
-    usuarios = Usuario.query.order_by(Usuario.questoes_acertadas.desc()).all()
-    #pagination = Pagination(total=usuarios.count(), record_name='usuarios')
-    return render_template('ranking.html', usuarios=usuarios)#, pagination=pagination)
+    p = request.args.get('p')
+    if request.args.get('p') == None:
+        p = '1'
+    ppage = int(p)
+    usuarios = Usuario.query.order_by(Usuario.questoes_acertadas.desc(),Usuario.numero_jogos.asc(),Usuario.usuario.asc()).paginate(per_page=10, page=ppage, error_out=True)
+    return render_template('ranking.html', usuarios=usuarios, pp = ppage)

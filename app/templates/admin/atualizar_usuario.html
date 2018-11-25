@@ -4,6 +4,41 @@
 
 {% block content %}
 
-    {{ wtf.quick_form(form) }}
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/admin/">Dashboard</a></li>
+            <li><a href="/admin/listar_questoes?q=1&c=1">Questões</a></li>
+            <li><a href="/admin/listar_usuarios?u=1&g=1">Usuários</a></li>
+        </ol>
+        <div style="padding-top:50px;"></div>
+        <div class="row">
+            <div class="col-xs-6">
+                    <b>Como atualizar um usuário?</b>
+                    <p>
+                        Preencha os dados, em seguida,
+                        clique em atualizar.
+                    </p>
+            </div>
+            <div class="col-xs-6">
+                <form method="POST" style="text-align: left;"> 
+                    <b>Código:</b><br> <input disabled="disabled" value="{{ usuario.cod_usuario }}"> <br><br>
+                    <b>Usuário:</b><br> <input name="usuario" type="text" value="{{ usuario.usuario }}"> <br><br>
+                    <b>Email:</b><br> <input name="email" type="text" value="{{ usuario.email }}"> <br><br>
+                    <b>Senha:</b><br> <input name="senha" type="password" value="{{ usuario.senha }}"> <br><br>
+                    <b>Tipo de usuário:</b><br>
+                    <select name="tipo_usuario" style="height:25px; width:175px;">
+                        {% for grupo in grupos %}
+                            {% if usuario.cod_grupo == grupo.cod_grupo %}
+                                <option value="{{ grupo.cod_grupo }}" selected>{{ grupo.grupo_nome }}</option>
+                            {% else %}
+                                <option value="{{ grupo.cod_grupo }}">{{ grupo.grupo_nome }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select> <br><br>
+                    <button type="submit" style="height:25px; width:175px;">Atualizar</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

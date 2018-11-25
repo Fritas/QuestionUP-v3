@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+    <div class="container" style="text-align:left;">
+        <!-- Menu de navegação externa -->
+        <ol class="breadcrumb">
+            <li><a href="/admin/">Dashboard</a></li>
+            <li><a href="/admin/listar_questoes?q=1&c=1">Questões</a></li>
+            <li class="active">Usuários</li>
+        </ol>
+        <!-- Tabela dos usuários -->
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th class="text-right" scope="col" data-field="cod_usuario">Cód.</th>
+                    <th class="text-left" scope="col" data-field="usuario">Usuário</th>
+                    <th class="text-left" scope="col" data-field="email">Email</th>
+                    <th class="text-left" scope="col" data-field="grupo">Grupo</th>
+                    <th scope="col" style="padding-left: 600px;"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios.items %}
+                    <tr>
+                        <th class="text-right" scope="row">{{ usuario.cod_usuario }}</th>
+                        <td class="text-left">{{ usuario.usuario }}</td>
+                        <td class="text-left">{{ usuario.email }}</td>
+                        <td class="text-left">{{ usuario.cod_grupo }}</td>
+                        <td class="text-right" style="padding-left: 600px;">
+                            <a href="/admin/atualizar_usuario?id={{ usuario.cod_usuario }}">Atualizar</a>
+                        </td>
+                        <td class="text-right">
+                            <a href="/admin/excluir_usuario?id={{ usuario.cod_usuario }}">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Paginação Usuários -->
+        {% for pagina in usuarios.iter_pages(left_edge=3, right_edge=3) %}
+            {% if pagina %}
+                <a href="/admin/listar_usuarios?u={{ pagina }}&g={{ gp }}">{{ pagina }}</a>
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+        <!-- Tabela dos grupos de usuário -->
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th class="text-right" scope="col" data-field="cod_grupo">Cód.</th>
+                    <th class="text-left" scope="col" data-field="grupo_nome">Grupo</th>
+                    <th scope="col" style="padding-left: 800px;"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grupo in grupos.items %}
+                    <tr>
+                        <th class="text-right" scope="row">{{ grupo.cod_grupo }}</th>
+                        <td class="text-left">{{ grupo.grupo_nome }}</td>                            
+                        <td class="text-right" style="padding-left: 800px;">
+                            <a href="/admin/atualizar_grupo?id={{ grupo.cod_grupo }}">Atualizar</a>
+                        </td>
+                        <td class="text-right">
+                            <a href="/admin/excluir_grupo?id={{ grupo.cod_grupo }}">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>     
+        </table>
+        <!-- Paginação Grupos -->
+        {% for pagina in grupos.iter_pages(left_edge=3, right_edge=3) %}
+            {% if pagina %}
+                <a href="/admin/listar_usuarios?u={{ up }}&g={{ pagina }}">{{ pagina }}</a>
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}   
+        <!-- Menu de navegação complementar -->
+        <ol class="breadcrumb" style="margin-top:15px;">
+            <li><a href="/admin/inserir_grupo">Inserir grupo de usuário</a></li>
+        </ol>
+    </div>
+{% endblock %}

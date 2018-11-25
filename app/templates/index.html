@@ -7,7 +7,16 @@
     <div class="page-header text-center">
         <h1>Seja bem vindo{% if current_user.is_authenticated %}, {{ current_user.usuario }}!{% else %}!{% endif %}</h1>
     </div>
-    <div class="container text-center">
-        <p>Você está acessando uma aplicação web de perguntas e respostas.</p>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <p style="text-align: justify; width:400px;">
+                O projeto QuestionUP consiste no desenvolvimento de uma aplicação web que integra o
+                uso de Python com o framework Flask, onde usuários podem responder as questões de
+                concursos, vestibulares e de outros afins após efetuarem um rápido cadastro que
+                armazena uma pontuação de acordo com o número de questões respondidas corretamente.
+            </p>
+        </div>
+        <div class="col-md-4"></div>
     </div>
 {% endblock %}

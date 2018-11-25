@@ -1,15 +1,23 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block title %}QuestionUP{% endblock %}
+{% block title %}QuestionUP{% endblock title %}
 
 {% block head %}
     {{ super() }}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-{% endblock %}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+{% endblock head %}
 
+{% block body %}
 {% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar navbar-inverse" style="background-color:#732628; border-radius: 0px;" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -18,39 +26,49 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">QuestionUP</a>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}" style="color:white;">QuestionUP</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('main.jogar') }}">Jogar</a></li>
-                    {% if current_user.is_authenticated %}
-                        <li><a href="#">Perfil</a></li>
-                    {% endif %}
-                    <li><a href="{{ url_for('main.ranking') }}">Ranking</a></li>
+                    <li><a href="{{ url_for('main.index') }}" style="color:white;">Home</a></li>
+                    <li><a href="{{ url_for('main.jogar') }}" style="color:white;">Jogar</a></li>
+                    <!--{% if current_user.is_authenticated %}
+                        <li><a href="#" style="color:white;">Perfil</a></li>
+                    {% endif %}-->
+                    <li><a href="/ranking?p=1" style="color:white;">Ranking</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
                         {% if current_user.is_administrator() %}
-                            <li><a href="{{ url_for('admin.index') }}">Administrar</a></li>
+                            <li>
+                                <a href="/admin/listar_questoes?q=1&c=1" style="color:white;">Administrar</a>
+                            </li>    
                         {% endif %}
-                        <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}" style="color:white;">Sair</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+                        <li><a href="{{ url_for('auth.login') }}" style="color:white;">Entrar</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock navbar %}
 
-{% block content %}
-    <div class="container">
-        {% for mensagem in get_flashed_messages() %}
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ mensagem }}
-            </div>
-        {% endfor %}
+<!-- ÁREA DE CONTEÚDO -->
+<div class="container">
+    {% block content %}
+    {% endblock content %}
+</div>
+
+<!-- ÁREA DO RODAPÉ -->
+<footer class="navbar navbar-default navbar-fixed-bottom" style="margin-bottom: 0px;background-color:#732628; 
+    border-color: black; border-radius: 0px; min-height: 100px; padding: 1em; ">
+    <div class="container-fluid text-center" style="color:white;">
+        <div id="col-md-4" style="padding:25px">
+            <span>
+                QuestionUP: Aplicação Web de Perguntas e Respostas
+            </span>
+        </div>
     </div>
-{% endblock %}
+</footer>
+{% endblock body %}

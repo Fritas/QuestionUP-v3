@@ -2,7 +2,7 @@
     Controller da aplicacao de autenticacao
 """
 
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required
 from . import auth
 from .. import db
@@ -32,13 +32,18 @@ def logout():
 
 @auth.route('/registrar', methods=['GET', 'POST'])
 def registrar():
-    form = RegistrarForm()
-    if form.validate_on_submit():
-        usuario = Usuario(email=form.email.data,
-                          usuario=form.usuario.data,
-                          senha=form.senha.data)
-        db.session.add(usuario)
-        db.session.commit()
-        flash('Você foi cadastrado ao QuestionUP!')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/registrar.html', form=form)
+    try:
+        form = RegistrarForm()
+        if form.validate_on_submit():
+            usuario = Usuario(email=form.email.data,
+                            usuario=form.usuario.data,
+                            senha=form.senha.data,
+                            cod_grupo=0)
+            db.session.add(usuario)
+            db.session.commit()
+            flash('Você foi cadastrado ao QuestionUP!')
+            login_user(usuario)
+            return redirect(url_for('main.index'))
+        return render_template('auth/registrar.html', form=form)
+    except:
+        abort(500)

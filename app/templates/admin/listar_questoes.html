@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+    <div class="container" style="text-align: left;">
+
+        <!-- Menu de navegação externo -->
+        <ol class="breadcrumb">
+            <li><a href="/admin/">Dashboard</a></li>
+            <li class="active">Questões</li>
+            <li><a href="/admin/listar_usuarios?u=1&g=1">Usuários</a></li>
+        </ol>
+
+        <!-- Tabela das questões -->
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th class="text-right" scope="col" data-field="cod_questao">Cód.</th>
+                    <th class="text-left" scope="col" data-field="questao">Questão</th>
+                    <th class="text-right" scope="col" style="padding-left: 300px;"></th>
+                    <th class="text-left" scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for questao in questoes.items %}
+                    <tr>
+                        <th class="text-right" scope="row">{{ questao.cod_questao }}</th>
+                        <td class="text-left">{{ questao.questao }}</td>
+                        
+                        <td class="text-right" style="padding-left: 300px;">
+                            <a href="/admin/atualizar_questao?id={{ questao.cod_questao }}">Atualizar</a>
+                        </td>
+                        <td class="text-left">
+                            <a href="/admin/excluir_questao?id={{ questao.cod_questao }}">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Paginação questões -->
+        {% for pagina in questoes.iter_pages(left_edge=3, right_edge=3) %}
+            {% if pagina %}
+                <a href="/admin/listar_questoes?q={{ pagina }}&c={{ cp }}">{{ pagina }}</a>
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+
+        <!-- Tabela das categorias -->
+        <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-right" scope="col" data-field="cod_categoria">Cód.</th>
+                        <th class="text-left" scope="col" data-field="categoria">Categoria</th>
+                        <th scope="col" style="padding-left: 800px;"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categoria in categorias.items %}
+                        <tr>
+                            <th class="text-right" scope="row">{{ categoria.cod_categoria }}</th>
+                            <td class="text-left">{{ categoria.categoria_nome }}</td>
+                            <td class="text-right" style="padding-left: 800px;">
+                                <a href="/admin/atualizar_categoria?id={{ categoria.cod_categoria }}">Atualizar</a>
+                            </td>
+                            <td class="text-left">
+                                <a href="/admin/excluir_categoria?id={{ categoria.cod_categoria }}">Excluir</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        <!-- Paginação categorias -->
+        {% for pagina in categorias.iter_pages(left_edge=3, right_edge=3) %}
+            {% if pagina %}
+                <a href="/admin/listar_questoes?q={{ qp }}&c={{ pagina }}">{{ pagina }}</a>
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+
+        <!-- Menu de navegação complementar -->
+        <ol class="breadcrumb" style="margin-top:15px;">
+            <li><a href="/admin/inserir_questao">Inserir nova questão</a></li>
+            <li><a href="/admin/inserir_categoria">Inserir nova categoria</a></li>
+        </ol>
+    </div>
+
+{% endblock %}
