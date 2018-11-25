@@ -2,6 +2,21 @@
 
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block head %}
+    {{ super() }}
+    <style>
+        .quebra {
+            width: 400px;
+            height: 25px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: wrap;
+            display: block;
+            margin: 0;
+        }
+    </style>
+{% endblock head %}
+
 {% block content %}
 
     <div class="container" style="text-align: left;">
@@ -19,6 +34,7 @@
                 <tr>
                     <th class="text-right" scope="col" data-field="cod_questao">Cód.</th>
                     <th class="text-left" scope="col" data-field="questao">Questão</th>
+                    <th class="text-left" scope="col" data-field="categoria">Categoria</th>
                     <th class="text-right" scope="col" style="padding-left: 300px;"></th>
                     <th class="text-left" scope="col"></th>
                 </tr>
@@ -27,8 +43,8 @@
                 {% for questao in questoes.items %}
                     <tr>
                         <th class="text-right" scope="row">{{ questao.cod_questao }}</th>
-                        <td class="text-left">{{ questao.questao }}</td>
-                        
+                        <td class="text-left"><p class="quebra">{{ questao.questao }}</p></td>
+                        <td class="text-left">{{ questao.cod_categoria }}</td>
                         <td class="text-right" style="padding-left: 300px;">
                             <a href="/admin/atualizar_questao?id={{ questao.cod_questao }}">Atualizar</a>
                         </td>

@@ -11,24 +11,30 @@ from .forms import LoginForm, RegistrarForm
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        usuario = Usuario.query.filter_by(usuario=form.usuario.data).first()
-        if usuario is not None and usuario.verificar_senha(form.senha.data):
-            login_user(usuario)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('main.index')
-            return redirect(next)
-        flash('Usuario ou senha inválidos.')
-    return render_template('auth/login.html', form=form)
+    try:
+        form = LoginForm()
+        if form.validate_on_submit():
+            usuario = Usuario.query.filter_by(usuario=form.usuario.data).first()
+            if usuario is not None and usuario.verificar_senha(form.senha.data):
+                login_user(usuario)
+                next = request.args.get('next')
+                if next is None or not next.startswith('/'):
+                    next = url_for('main.index')
+                return redirect(next)
+            flash('Usuario ou senha inválidos.')
+        return render_template('auth/login.html', form=form)
+    except:
+        abort(500)
 
 @auth.route('/logout')
 @login_required
 def logout():
-    logout_user()
-    flash('Você desconectou-se da conta.')
-    return redirect(url_for('main.index'))
+    try:
+        logout_user()
+        flash('Você desconectou-se da conta.')
+        return redirect(url_for('main.index'))
+    except:
+        abort(500)
 
 @auth.route('/registrar', methods=['GET', 'POST'])
 def registrar():
