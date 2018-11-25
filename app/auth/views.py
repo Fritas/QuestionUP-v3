@@ -23,8 +23,8 @@ def login():
                 return redirect(next)
             flash('Usuario ou senha inválidos.')
         return render_template('auth/login.html', form=form)
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @auth.route('/logout')
 @login_required
@@ -33,8 +33,8 @@ def logout():
         logout_user()
         flash('Você desconectou-se da conta.')
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @auth.route('/registrar', methods=['GET', 'POST'])
 def registrar():
@@ -51,5 +51,5 @@ def registrar():
             login_user(usuario)
             return redirect(url_for('main.index'))
         return render_template('auth/registrar.html', form=form)
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)

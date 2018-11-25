@@ -14,9 +14,12 @@ from ..models import Usuario, Questao, Categoria, Grupo
 @login_required
 def index():
     """ Abre pagina 'ponte' que interliga todas as paginas com fins administrativos """
-    if current_user.is_administrator():
-        return render_template('admin/index.html')
-    return redirect(url_for('main.index'))
+    try:
+        if current_user.is_administrator():
+            return render_template('admin/index.html')
+        return redirect(url_for('main.index'))
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/inserir_questao', methods=['GET', 'POST'])
 @login_required
@@ -42,8 +45,8 @@ def inserir_questao():
                 return listar_questoes()
             return render_template('admin/inserir_questao.html', categorias=categorias)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/deletar_questao', methods=['GET', 'POST'])
 @login_required
@@ -61,8 +64,8 @@ def deletar_questao():
                 lista_questoes.clear()
                 return redirect(url_for('admin.deletar_questao'))
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/inserir_categoria', methods=['GET', 'POST'])
 @login_required
@@ -79,8 +82,8 @@ def inserir_categoria():
                 return listar_questoes()
             return render_template('admin/inserir_categoria.html')
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/excluir_categoria')
 @login_required
@@ -94,8 +97,8 @@ def excluir_categoria():
             db.session.commit()
             return listar_questoes()
         return redirect(url_for('admin.listar_questoes'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/atualizar_categoria', methods=['GET','POST'])
 @login_required
@@ -111,8 +114,8 @@ def atualizar_categoria():
                 return redirect(url_for('admin.listar_questoes'))
             return render_template('admin/atualizar_categoria.html', categoria=categoria)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/atualizar_usuario', methods=['GET', 'POST'])
 @login_required
@@ -132,8 +135,8 @@ def atualizar_usuario():
                 return redirect(url_for('admin.listar_usuarios'))
             return render_template('admin/atualizar_usuario.html', usuario=usuario, grupos=grupos)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/listar_usuarios', methods=['GET','POST'])
 @login_required
@@ -153,8 +156,8 @@ def listar_usuarios():
             grupos = Grupo.query.paginate(per_page=4, page=gpage, error_out=True)
             return render_template('admin/listar_usuarios.html', usuarios=usuarios, grupos=grupos, up=upage, gp=gpage)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/excluir_usuario')
 @login_required
@@ -168,8 +171,8 @@ def excluir_usuario():
             db.session.commit()
             return listar_usuarios()
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/listar_questoes')
 @login_required
@@ -189,8 +192,8 @@ def listar_questoes():
             categorias = Categoria.query.paginate(per_page=4, page=cpage, error_out=True)
             return render_template('admin/listar_questoes.html', questoes=questoes, categorias=categorias, qp=qpage, cp=cpage)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/atualizar_questao', methods=['GET','POST'])
 @login_required
@@ -214,8 +217,8 @@ def atualizar_questao():
                 return redirect(url_for('admin.listar_questoes'))
             return render_template('admin/atualizar_questao.html', questao=questao, categorias=categorias)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/excluir_questao')
 @login_required
@@ -229,8 +232,8 @@ def excluir_questao():
             db.session.commit()
             return listar_questoes()
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/inserir_grupo', methods=['GET','POST'])
 @login_required
@@ -247,8 +250,8 @@ def inserir_grupo():
                 return listar_usuarios()
             return render_template('admin/inserir_grupo.html')
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/excluir_grupo')
 @login_required
@@ -262,8 +265,8 @@ def excluir_grupo():
             db.session.commit()
             return listar_usuarios()
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/atualizar_grupo', methods=['GET','POST'])
 @login_required
@@ -279,8 +282,8 @@ def atualizar_grupo():
                 return listar_usuarios()
             return render_template('admin/atualizar_grupo.html', grupo=grupo)
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @admin.route('/resetar_dados')
 @login_required
@@ -301,5 +304,5 @@ def resetar_dados():
             db.session.commit()
             return redirect(url_for('main.ranking'))
         return redirect(url_for('main.index'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)

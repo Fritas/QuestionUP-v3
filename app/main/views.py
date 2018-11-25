@@ -35,8 +35,8 @@ def questao_aleatoria():
                 return index()
         numero_aleatorio = random.randrange(0, len(lista_questoes))
         return lista_questoes[numero_aleatorio]
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 def questao_sequencial(codigo_questao):
     questao = Questao.query.filter_by(cod_questao=codigo_questao).first()
@@ -46,7 +46,7 @@ def getQuestao(cod_questao):
     questao = Questao.query.filter_by(cod_questao=cod_questao).first()
     existe = db.session.query(db.exists().where(Questao.cod_questao == cod_questao)).scalar()
     if not existe:
-        abort(500)
+        abort(500, 'questão requisitada não existe')
     return questao
 
 @main.route('/', methods=['GET', 'POST'])
@@ -58,8 +58,8 @@ def index():
 def jogar():
     try:
         if request.method == 'GET':
-            questao = questao_aleatoria() #se for aleatorio, tirar comentario dessa linha
-            #questao = getQuestao(1) # se for aleatorio, remover essa linha
+            #questao = questao_aleatoria() #se for aleatorio, tirar comentario dessa linha
+            questao = getQuestao(1) # se for aleatorio, remover essa linha
             form = ConfirmarRepostaForm()
             return render_template('jogar.html', questao=questao, form=form)
         if request.method == 'POST':
@@ -68,11 +68,11 @@ def jogar():
             cod_questao = request.form['cod_questao']
             questao = getQuestao(cod_questao)
             if verificar_resposta(questao, alternativa_escolhida):
-                questao = questao_aleatoria() # se for aleatorio, tirar comentario dessa linha
-                #cod = int(cod_questao) # se for aleatorio, remover essa linha
-                #cod += 1 # se for aleatorio, remover essa linha
-                #questao = getQuestao(cod) # se for aleatorio, mudar cod para cod_questao
-                questao = getQuestao(questao)
+                #questao = questao_aleatoria() # se for aleatorio, tirar comentario dessa linha
+                cod = int(cod_questao) # se for aleatorio, remover essa linha
+                cod += 1 # se for aleatorio, remover essa linha
+                questao = getQuestao(cod) # se for aleatorio, mudar cod para cod_questao
+                #questao = getQuestao(questao)
                 form = ConfirmarRepostaForm()
                 global numero_acertos
                 numero_acertos += 1
@@ -87,8 +87,8 @@ def jogar():
             lista_questoes[0] = None
             flash('Que pena! Você errou, com isso seu placar foi a zero!')
             return redirect(url_for('main.ranking'))
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
 
 @main.route('/ranking')
 def ranking():
@@ -99,5 +99,5 @@ def ranking():
         ppage = int(p)
         usuarios = Usuario.query.order_by(Usuario.questoes_acertadas.desc(),Usuario.numero_jogos.asc(),Usuario.usuario.asc()).paginate(per_page=10, page=ppage, error_out=True)
         return render_template('ranking.html', usuarios=usuarios, pp = ppage)
-    except:
-        abort(500)
+    except Exception as e:
+        abort(500, e)
