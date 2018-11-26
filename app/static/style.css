@@ -1,0 +1,19 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+footer{
+    border-color: black; 
+     
+    min-height: 100px;
+    padding: 1em;
+}
+
+.content {
+    min-height: calc(100% - 100px); /* DIMINUIR A ALTURA DO FOOTER*/
+}
+.content-inside {
+    padding: 20px;
+    padding-bottom: 50px;
+}

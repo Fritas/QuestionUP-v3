@@ -6,65 +6,84 @@
     {{ super() }}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
     <style>
+        :root{
+            --height-footer: 6.25em;
+        }
         html, body {
             height: 100%;
             margin: 0;
-            padding: 0;
+          }
+        
+        footer{
+            min-height: var(--height-footer);
+            padding: 0.25em;
+        }
+        .footer {
+            border-color: black; 
+            background-color:#732628;
+        }
+        .content {
+            min-height: calc(100% - var(--height-footer)); 
+        }
+        .content-inside {
+            padding: 20px;
+            padding-bottom: 50px;
         }
     </style>
 {% endblock head %}
 
 {% block body %}
-{% block navbar %}
-    <div class="navbar navbar-inverse" style="background-color:#732628; border-radius: 0px;" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{ url_for('main.index') }}" style="color:white;">QuestionUP</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.index') }}" style="color:white;">Home</a></li>
-                    <li><a href="{{ url_for('main.jogar') }}" style="color:white;">Jogar</a></li>
-                    <!--{% if current_user.is_authenticated %}
-                        <li><a href="#" style="color:white;">Perfil</a></li>
-                    {% endif %}-->
-                    <li><a href="/ranking?p=1" style="color:white;">Ranking</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
-                        {% if current_user.is_administrator() %}
-                            <li>
-                                <a href="/admin/listar_questoes?q=1&c=1" style="color:white;">Administrar</a>
-                            </li>    
+<div class="content">
+    {% block navbar %}
+        <div class="navbar navbar-inverse" style="background-color:#732628; border-radius: 0px;" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('main.index') }}" style="color:white;">QuestionUP</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url_for('main.index') }}" style="color:white;">Home</a></li>
+                        <li><a href="{{ url_for('main.jogar') }}" style="color:white;">Jogar</a></li>
+                        <!--{% if current_user.is_authenticated %}
+                            <li><a href="#" style="color:white;">Perfil</a></li>
+                        {% endif %}-->
+                        <li><a href="/ranking?p=1" style="color:white;">Ranking</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.is_administrator() %}
+                                <li>
+                                    <a href="/admin/listar_questoes?q=1&c=1" style="color:white;">Administrar</a>
+                                </li>    
+                            {% endif %}
+                            <li><a href="{{ url_for('auth.logout') }}" style="color:white;">Sair</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('auth.login') }}" style="color:white;">Entrar</a></li>
                         {% endif %}
-                        <li><a href="{{ url_for('auth.logout') }}" style="color:white;">Sair</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('auth.login') }}" style="color:white;">Entrar</a></li>
-                    {% endif %}
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
+    {% endblock navbar %}
+
+    <!-- ÁREA DE CONTEÚDO -->
+    <div class="container content-inside">
+        {% block content %}
+        {% endblock content %}
     </div>
-{% endblock navbar %}
-
-<!-- ÁREA DE CONTEÚDO -->
-<div class="container">
-    {% block content %}
-    {% endblock content %}
 </div>
-
 <!-- ÁREA DO RODAPÉ -->
-<footer class="navbar navbar-default navbar-fixed-bottom" style="margin-bottom: 0px;background-color:#732628; 
-    border-color: black; border-radius: 0px; min-height: 100px; padding: 1em; ">
+<footer class="footer">
     <div class="container-fluid text-center" style="color:white;">
-        <div id="col-md-4" style="padding:25px">
+        <div id="col-md-4" style="padding:2em">
             <span>
                 QuestionUP: Aplicação Web de Perguntas e Respostas
             </span>

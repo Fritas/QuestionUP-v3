@@ -74,4 +74,4 @@ def montar():
     # Grupo.inserir_grupos()
 
 if __name__ == '__main__':
-    app.run(host='192.168.2.2', port=5000)
+    app.run(host='192.168.0.6', port=5000)
