@@ -1,18 +1,26 @@
+:root{
+    --height-footer: 6.25em;
+}
+
 html, body {
     height: 100%;
     margin: 0;
   }
-  
+
 footer{
+    min-height: var(--height-footer);
+    padding: 0.25em;
+}
+
+.footer {
     border-color: black; 
-     
-    min-height: 100px;
-    padding: 1em;
+    background-color:#732628;
 }
 
 .content {
-    min-height: calc(100% - 100px); /* DIMINUIR A ALTURA DO FOOTER*/
+    min-height: calc(100% - var(--height-footer)); 
 }
+
 .content-inside {
     padding: 20px;
     padding-bottom: 50px;
