@@ -1,0 +1,42 @@
+:root{
+    --height-footer: 6.25em; /* Alterar a altura do Footer aqui */
+}
+
+/* TAGs */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+footer{
+    min-height: var(--height-footer); /* Caso os dados do footer pode ser um problema, dai é só aumentar */
+    padding: 0.25em;
+}
+
+/* CLASSs */
+.footer {
+    border-color: black; 
+    background-color:#732628; 
+}
+
+.content {
+    min-height: calc(100% - var(--height-footer)); /* Calcula o tamanho da tela tirando o footer */
+}
+
+.content-inside {
+    padding: 20px;
+    padding-bottom: 50px;
+}
+
+.text-white {
+    color: white;
+}
+/* IDs */
+#nav-style {
+    background-color: #732628; 
+    border-color: #732628;
+    border-radius: 0px;
+}
+#nav-style a {
+    color: white !important; /* todos os links do menu na cor branca*/
+}
